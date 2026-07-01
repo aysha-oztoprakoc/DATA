@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "odysseus-rag": {
+      "command": "python",
+      "args": ["/home/amdy/odysseus/mcp_servers/rag_server.py"],
+      "env": {
+        "PYTHONPATH": "/home/amdy/odysseus"
+      }
+    },
+    "odysseus-memory": {
+      "command": "python",
+      "args": ["/home/amdy/odysseus/mcp_servers/memory_server.py"],
+      "env": {
+        "PYTHONPATH": "/home/amdy/odysseus",
+        "ODYSSEUS_MCP_MEMORY_OWNER": "amdy"
+      }
+    },
+    "kad-pipeline": {
+      "command": "python",
+      "args": ["/home/amdy/DATA/kad-1.0/amdy/mcp/kad_mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "/home/amdy/DATA/kad-1.0/amdy",
+        "MQTT_BROKER": "localhost",
+        "MQTT_PORT": "1883",
+        "ODYSSEUS_URL": "http://localhost:7000"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+# ═══════════════════════════════════════════════════════════════
+# Redis — Docker Compose
+# KAD 1.1 — Runs on AMDY (192.168.0.1)
+# ═══════════════════════════════════════════════════════════════
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: kad-redis
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  redis-data:
+    driver: local

@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExtractResult",
+  "description": "Resultado de uma extração de dados no nó TELL (OCR, STT, Texto, etc.)",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "O event_id do IngestEvent original que causou esta extração"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_node": {
+      "type": "string"
+    },
+    "source_file": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "required": ["path", "sha256"]
+    },
+    "extraction": {
+      "type": "object",
+      "properties": {
+        "extractor": {
+          "type": "string",
+          "description": "Nome do plugin de extração utilizado (ex: image_extractor, audio_extractor)"
+        },
+        "content_type": {
+          "type": "string",
+          "description": "MIME type do output (ex: text/plain)"
+        },
+        "text": {
+          "type": "string",
+          "description": "Conteúdo extraído (texto, transcrição, etc.)"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Metadados extraídos (EXIF, tags ID3, propriedades do Office)",
+          "additionalProperties": true
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Nível de confiança da extração (importante para OCR/Whisper)"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tempo que a extração demorou em ms"
+        }
+      },
+      "required": ["extractor", "content_type", "text", "metadata", "duration_ms"]
+    }
+  },
+  "required": ["event_id", "source_event_id", "timestamp", "source_node", "source_file", "extraction"]
+}

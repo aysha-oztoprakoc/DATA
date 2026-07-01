@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IngestEvent",
+  "description": "Evento disparado quando um novo ficheiro é detetado no nó TELL via inotify",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identificador único do evento"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp ISO8601 de quando a interrupção ocorreu"
+    },
+    "source_node": {
+      "type": "string",
+      "description": "O nó de origem (ex: 'tell')"
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Caminho absoluto do ficheiro no TELL"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome do ficheiro"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Tamanho do ficheiro em bytes"
+        },
+        "mime_type": {
+          "type": "string",
+          "description": "MIME type detetado do ficheiro"
+        },
+        "sha256": {
+          "type": "string",
+          "description": "Hash SHA256 do conteúdo do ficheiro"
+        }
+      },
+      "required": ["path", "name", "size_bytes", "mime_type", "sha256"]
+    },
+    "inotify_event": {
+      "type": "string",
+      "enum": ["IN_CLOSE_WRITE", "IN_MOVED_TO"],
+      "description": "A interrupção exata gerada pelo kernel Linux"
+    }
+  },
+  "required": ["event_id", "timestamp", "source_node", "file", "inotify_event"]
+}

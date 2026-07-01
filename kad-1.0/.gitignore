@@ -1,0 +1,54 @@
+# ═══ C++ Build ═══
+build/
+cmake-build-*/
+*.o
+*.a
+*.so
+*.dylib
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# ═══ Conan ═══
+conanbuildinfo.*
+conaninfo.txt
+graph_info.json
+
+# ═══ Python ═══
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+*.egg
+.venv/
+venv/
+env/
+
+# ═══ Environment ═══
+.env
+*.env
+!.env.example
+!tell/config/tell.env.example
+!amdy/config/amdy.env.example
+
+# ═══ IDE ═══
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cache/
+
+# ═══ OS ═══
+.DS_Store
+Thumbs.db
+
+# ═══ MQTT Persistence ═══
+broker/data/
+
+# ═══ Runtime ═══
+logs/
+*.log
+*.pid

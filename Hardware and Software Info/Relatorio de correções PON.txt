@@ -1,0 +1,47 @@
+================================================================================
+DOCUMENTO DE DIRETRIZES E CORREÇÕES ARQUITETURAIS: PROJETO KAD 1.1
+Contexto: Unificação Antigravity (agy), Odysseus AI e PON (Amdy <-> Tell)
+Objetivo: Maximização de RAG para Ingestão em Modelos de Linguagem
+================================================================================
+
+1. INTRODUÇÃO E DIAGNÓSTICO DO ESTADO ATUAL
+--------------------------------------------------------------------------------
+O presente documento detalha as lacunas no entendimento e na implementação do framework Antigravity (agy) operando sobre o Paradigma Orientado a Notificações (PON). A orquestração atual do ecossistema distribuído Omarchy Linux (amdy <-> tell) ainda apresenta vícios de acoplamento temporal e espacial derivados do Paradigma Orientado a Objetos (POO) e da programação imperativa.
+
+2. CORREÇÃO 1: ELIMINAÇÃO DA FALSA REATIVIDADE (POLLING ATIVO)
+--------------------------------------------------------------------------------
+O problema primário do Antigravity atual é a utilização de buscas ativas (polling) no amdy para verificar filas ou estados de requisição.
+* O PON é uma abordagem arquitetural cujo cerne é a reatividade absoluta e a eliminação do acoplamento temporal (loops imperativos, polling, bloqueios ativos)[cite: 50].
+* O processamento só deve ocorrer estritamente quando há uma mudança de estado, mitigando desperdício de ciclos de CPU e reduzindo latência[cite: 51].
+* Diretriz para o agy: Abandonar imediatamente os loops de verificação (`while True`). O daemon pon_engine.py deve aguardar via blocking I/O, consumindo 0.0% de CPU[cite: 36].
+* A comunicação IPC baseada em pipes nomeados (/tmp/pon_bus) substitui totalmente as chamadas síncronas de shell para ações locais[cite: 35].
+* Para comunicação externa com o servidor tell, o sistema deve utilizar os tópicos MQTT de publicação (omarchy/sync) como barramento padrão de dados[cite: 60].
+
+3. CORREÇÃO 2: ABSTRAÇÃO DE ENTIDADES FATO-EXECUCIONAIS (FBE)
+--------------------------------------------------------------------------------
+Atualmente, o agy trata os scripts e pipelines de IA como objetos ou funções tradicionais, chamando-os de forma encadeada.
+* O conceito de FBE (Entidade Fato-Execucional) deve ser integrado como um singleton ou wrapper instanciável nas premissas de geração de código Python[cite: 58].
+* FBEs diferem dos objetos tradicionais pois não requerem chamadas diretas de métodos para atualizar estado[cite: 52].
+* Elas apenas emitem notificações quando seus Atributos internos sofrem mutação[cite: 53].
+* Regras (Rules) não são chamadas diretamente; elas despertam (são instigadas) mediante notificações dos FBEs[cite: 54, 55].
+* O setter de um Atributo é inerentemente ligado ao motor de inferência causal do PON[cite: 54].
+* Para o ComfyUI: A orquestração de workflows complexos do ComfyUI funciona naturalmente como um grafo direcionado acíclico (DAG)[cite: 45].
+* Transformar esse pipeline num sistema PON tornaria cada nó um FBE[cite: 46].
+* Um nó só consome VRAM e dispara o processamento GPU estritamente quando o tensor do nó anterior (Attribute) for atualizado[cite: 47].
+
+4. CORREÇÃO 3: ACOPLAMENTO DE ESTADO NA MÁQUINA INCORRETA
+--------------------------------------------------------------------------------
+A separação de papéis entre o amdy (Workstation principal com Ryzen/GPU forte) e o tell (Servidor i5 de armazenamento) não está otimizada no motor de inferência atual.
+* O conhecimento explícito do hardware da rede (amdy como hospedeiro, tell como servidor de backup) dita o comportamento dinâmico das FBEs[cite: 42].
+* Regras PON (rl_AllowAction) condicionam o envio de payloads via rede baseadas nas capacidades do tell[cite: 43].
+* O amdy deve atuar unicamente como o hospedeiro dos "Métodos" (algoritmos concretos desencadeados atômicamente)[cite: 55]. Ele fornece a força bruta computacional (VRAM/CPU) mas não deve armazenar o estado global ou travar esperando requisições.
+* O tell, atuando como Entidade Redundante Remota via biblioteca paho.mqtt [cite: 37], deve assumir a Base de Atributos, centralizando o estado da memória sem pooling agressivo no banco de dados vetorial[cite: 39].
+
+5. DIRETRIZES DE REFATORAÇÃO PARA A IA GERADORA
+--------------------------------------------------------------------------------
+Ao ingerir este documento, modelos de IA (locais ou o próprio Gemini) devem:
+* Abandonar verificações (while loops) por pipes reativos (Event-Driven I/O) sempre que sugerir código para ambientes Linux distribuídos[cite: 59].
+* Aplicar o PON nas rotinas de carregamento de contexto assíncrono do Odysseus[cite: 40].
+* Garantir que toda a orquestração do Agente Autônomo Antigravity utilize os preceitos de reatividade, acordando (Reactive Wakeup) somente quando o usuário interage ou quando uma background task do shell emite um output, sem consumir tokens rodando loops ociosos[cite: 49].
+================================================================================
+FIM DO DOCUMENTO

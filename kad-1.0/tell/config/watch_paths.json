@@ -1,0 +1,9 @@
+{
+  "watch_paths": [
+    {"path": "/srv/kad/inbox/images", "recursive": false, "events": ["IN_CLOSE_WRITE", "IN_MOVED_TO"]},
+    {"path": "/srv/kad/inbox/audio", "recursive": false, "events": ["IN_CLOSE_WRITE", "IN_MOVED_TO"]},
+    {"path": "/srv/kad/inbox/text", "recursive": false, "events": ["IN_CLOSE_WRITE", "IN_MOVED_TO"]},
+    {"path": "/srv/kad/inbox/documents", "recursive": false, "events": ["IN_CLOSE_WRITE", "IN_MOVED_TO"]},
+    {"path": "/srv/kad/inbox/misc", "recursive": false, "events": ["IN_CLOSE_WRITE", "IN_MOVED_TO"]}
+  ]
+}

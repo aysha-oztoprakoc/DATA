@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VectorizeCmd",
+  "description": "Comando enviado pelo KAD Bridge para o serviço de vetorização no nó AMDY",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "O event_id do ExtractResult que causou esta vetorização"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content": {
+      "type": "string",
+      "description": "Conteúdo de texto a vetorizar"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source_node": { "type": "string" },
+        "source_file": { "type": "string" },
+        "source_sha256": { "type": "string" },
+        "extractor": { "type": "string" },
+        "original_mime": { "type": "string" }
+      },
+      "required": ["source_node", "source_file", "source_sha256", "extractor", "original_mime"]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "description": "Coleção ChromaDB de destino"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Username proprietário dos dados no Odysseus"
+        }
+      },
+      "required": ["collection"]
+    }
+  },
+  "required": ["event_id", "source_event_id", "timestamp", "content", "metadata", "target"]
+}
