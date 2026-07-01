@@ -25,7 +25,7 @@ TOPIC_ACTION_REQUESTED = "amdy/fbe/attributes/PowerManager/at_ShutdownRequested"
 TOPIC_TESTS_PASSED = "amdy/fbe/attributes/BackupConfig/at_TestsPassed"
 TOPIC_REDUNDANT_SYNC = "tell/fbe/attributes/BackupState/sync"
 
-DOTFILES_DIR = os.path.expanduser("~/.dotfiles")
+DOTFILES_DIR = os.path.expanduser("~/DATA/omarchy-dotfiles")
 HOME_DIR = os.path.expanduser("~")
 
 class PON_Method:
